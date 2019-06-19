@@ -26,6 +26,11 @@ public:
   double stddev;
 
   uint64_t seed;
+
+  double sparsity;
+  double zipf;
+
+  uint64_t n_elements;
 };
 
 #define SETUP_CONTEXT(context)                                                 \
