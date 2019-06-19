@@ -6,6 +6,7 @@
 
 #include <ostream>
 #include <vector>
+#include <tuple>
 
 class Vector {
 public:
