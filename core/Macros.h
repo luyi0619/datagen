@@ -6,7 +6,6 @@
 
 #include <glog/logging.h>
 
-
 DEFINE_string(file, "data.txt", "output file");
 
 DEFINE_int32(n_points, 100, "number of data points");

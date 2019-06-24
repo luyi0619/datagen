@@ -31,6 +31,8 @@ public:
   double zipf;
 
   uint64_t n_elements;
+
+  std::string format;
 };
 
 #define SETUP_CONTEXT(context)                                                 \

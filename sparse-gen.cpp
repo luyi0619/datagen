@@ -10,10 +10,15 @@
 #include "common/Zipf.h"
 #include "core/Context.h"
 #include "core/Macros.h"
-#include "core/Vector.h"
+#include "core/SparseVector.h"
 
 DEFINE_double(sparsity, 0.01, "sparsity of data");
 DEFINE_double(zipf, 0, "skew factor on data columns");
+DEFINE_string(format, "dok", "output format: (dok, dense)");
+
+void check_format(const std::string &format) {
+  CHECK(format == "dok" || format == "dense") << "output format is not valid.";
+}
 
 template <class DataType, class RNG>
 void sparse_data_gen(SparseVector<DataType> &vec, RNG &random,
@@ -46,7 +51,7 @@ void binary_data_gen(const Context &context, std::ofstream &output) {
     int size = n_elements / (context.n_points - i);
     sparse_data_gen(v, r, size);
     n_elements -= size;
-    v.print(output);
+    v.print(output, context);
   }
 }
 
@@ -58,7 +63,7 @@ void int_data_gen(const Context &context, std::ofstream &output) {
     int size = n_elements / (context.n_points - i);
     sparse_data_gen(v, r, size);
     n_elements -= size;
-    v.print(output);
+    v.print(output, context);
   }
 }
 
@@ -70,7 +75,7 @@ void real_uniform_data_gen(const Context &context, std::ofstream &output) {
     int size = n_elements / (context.n_points - i);
     sparse_data_gen(v, r, size);
     n_elements -= size;
-    v.print(output);
+    v.print(output, context);
   }
 }
 
@@ -82,7 +87,7 @@ void real_normal_data_gen(const Context &context, std::ofstream &output) {
     int size = n_elements / (context.n_points - i);
     sparse_data_gen(v, r, size);
     n_elements -= size;
-    v.print(output);
+    v.print(output, context);
   }
 }
 
@@ -98,6 +103,9 @@ int main(int argc, char *argv[]) {
   context.zipf = FLAGS_zipf;
   context.n_elements =
       1LL * context.n_points * context.n_dimension * context.sparsity;
+
+  check_format(FLAGS_format);
+  context.format = FLAGS_format;
 
   std::string file = context.file;
   std::ofstream output(file);

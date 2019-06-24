@@ -6,8 +6,8 @@
 
 #include "common/Random.h"
 #include "core/Context.h"
+#include "core/DenseVector.h"
 #include "core/Macros.h"
-#include "core/Vector.h"
 
 template <class DataType, class RNG>
 void dense_data_gen(DenseVector<DataType> &vec, RNG &random, std::size_t size) {
@@ -26,7 +26,7 @@ void binary_data_gen(const Context &context, std::ofstream &output) {
   for (auto i = 0u; i < context.n_points; i++) {
     DenseVector<bool> v;
     dense_data_gen(v, r, context.n_dimension);
-    v.print(output);
+    v.print(output, context);
   }
 }
 
@@ -35,7 +35,7 @@ void int_data_gen(const Context &context, std::ofstream &output) {
   for (auto i = 0u; i < context.n_points; i++) {
     DenseVector<int> v;
     dense_data_gen(v, r, context.n_dimension);
-    v.print(output);
+    v.print(output, context);
   }
 }
 
@@ -44,7 +44,7 @@ void real_uniform_data_gen(const Context &context, std::ofstream &output) {
   for (auto i = 0u; i < context.n_points; i++) {
     DenseVector<double> v;
     dense_data_gen(v, r, context.n_dimension);
-    v.print(output);
+    v.print(output, context);
   }
 }
 
@@ -53,7 +53,7 @@ void real_normal_data_gen(const Context &context, std::ofstream &output) {
   for (auto i = 0u; i < context.n_points; i++) {
     DenseVector<double> v;
     dense_data_gen(v, r, context.n_dimension);
-    v.print(output);
+    v.print(output, context);
   }
 }
 

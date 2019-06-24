@@ -8,6 +8,8 @@ set(CMAKE_CXX_STANDARD 14)
 
 find_library(jemalloc_lib jemalloc) # jemalloc 5.0
 
+include_directories(${CMAKE_SOURCE_DIR})
+
 # additional target to perform clang-format run, requires clang-format
 
 # get all project files
