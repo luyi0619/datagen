@@ -13,7 +13,7 @@ cmake/*
 
 # Unignore the following files
 !*CMakeLists.txt
-
+!.travis.yml
 !.gitignore
 
 # Unignore source code directories

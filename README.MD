@@ -1,3 +1,8 @@
+Dense and Sparse Data Generator
+=
+
+[![Build Status](https://travis-ci.org/luyi0619/datagen.svg?branch=master)](https://travis-ci.org/luyi0619/datagen)
+
 # Dependencies
 
 ```sh
