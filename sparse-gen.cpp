@@ -17,7 +17,8 @@ DEFINE_double(zipf, 0, "skew factor on data columns");
 DEFINE_string(format, "dok", "output format: (dok, dense)");
 
 void check_format(const std::string &format) {
-  CHECK(format == "dok" || format == "dense") << "output format is not valid.";
+  CHECK(format == "dok" || format == "line" || format == "dense")
+      << "output format is not valid.";
 }
 
 template <class DataType, class RNG>

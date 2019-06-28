@@ -26,6 +26,21 @@ template <class DataType> class SparseVector {
     }
   };
 
+  class LineVectorPrinter {
+  public:
+    void operator()(std::ostream &o, const SparseVector &v,
+                    const Context &context) {
+
+      for (auto i = 0u; i < v.vec.size(); i++) {
+        if (i > 0) {
+          o << " ";
+        }
+        o << std::get<0>(v.vec[i]) << " " << std::get<1>(v.vec[i]);
+      }
+      o << "\n";
+    }
+  };
+
   class DenseVectorPrinter {
   public:
     void operator()(std::ostream &o, const SparseVector &v,
@@ -58,6 +73,8 @@ public:
 
     if (context.format == "dok") {
       DokVectorPrinter()(o, *this, context);
+    } else if (context.format == "line") {
+      LineVectorPrinter()(o, *this, context);
     } else if (context.format == "dense") {
       DenseVectorPrinter()(o, *this, context);
     } else {
