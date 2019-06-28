@@ -30,6 +30,8 @@ public:
   double sparsity;
   double zipf;
 
+  double row_uncertainty;
+
   uint64_t n_elements;
 
   std::string format;

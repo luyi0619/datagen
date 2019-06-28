@@ -15,10 +15,17 @@
 DEFINE_double(sparsity, 0.01, "sparsity of data");
 DEFINE_double(zipf, 0, "skew factor on data columns");
 DEFINE_string(format, "dok", "output format: (dok, dense)");
+DEFINE_double(row_uncertainty, 0.0,
+              "uncertainty on number of non-zero elements");
 
 void check_format(const std::string &format) {
   CHECK(format == "dok" || format == "line" || format == "dense")
       << "output format is not valid.";
+}
+
+void check_uncertainty(double row_uncertainty) {
+  CHECK(row_uncertainty >= 0 && row_uncertainty <= 1)
+      << "valid uncertainty range [0, 1]";
 }
 
 template <class DataType, class RNG>
@@ -45,11 +52,13 @@ void sparse_data_gen(SparseVector<DataType> &vec, RNG &random,
 }
 
 void binary_data_gen(const Context &context, std::ofstream &output) {
+  UniformRealRandom r0(1 - context.row_uncertainty,
+                       1 + context.row_uncertainty);
   BinaryRandom r(context.bernoulli, context.seed);
   uint64_t n_elements = context.n_elements;
   for (auto i = 0u; i < context.n_points; i++) {
     SparseVector<bool> v(i);
-    int size = n_elements / (context.n_points - i);
+    int size = n_elements / (context.n_points - i) * r0.next();
     sparse_data_gen(v, r, size);
     n_elements -= size;
     v.print(output, context);
@@ -57,11 +66,13 @@ void binary_data_gen(const Context &context, std::ofstream &output) {
 }
 
 void int_data_gen(const Context &context, std::ofstream &output) {
+  UniformRealRandom r0(1 - context.row_uncertainty,
+                       1 + context.row_uncertainty);
   UniformIntRandom r(context.range_low, context.range_high, context.seed);
   uint64_t n_elements = context.n_elements;
   for (auto i = 0u; i < context.n_points; i++) {
     SparseVector<int> v(i);
-    int size = n_elements / (context.n_points - i);
+    int size = n_elements / (context.n_points - i) * r0.next();
     sparse_data_gen(v, r, size);
     n_elements -= size;
     v.print(output, context);
@@ -69,11 +80,13 @@ void int_data_gen(const Context &context, std::ofstream &output) {
 }
 
 void real_uniform_data_gen(const Context &context, std::ofstream &output) {
+  UniformRealRandom r0(1 - context.row_uncertainty,
+                       1 + context.row_uncertainty);
   UniformRealRandom r(context.range_low, context.range_high, context.seed);
   uint64_t n_elements = context.n_elements;
   for (auto i = 0u; i < context.n_points; i++) {
     SparseVector<double> v(i);
-    int size = n_elements / (context.n_points - i);
+    int size = n_elements / (context.n_points - i) * r0.next();
     sparse_data_gen(v, r, size);
     n_elements -= size;
     v.print(output, context);
@@ -81,11 +94,13 @@ void real_uniform_data_gen(const Context &context, std::ofstream &output) {
 }
 
 void real_normal_data_gen(const Context &context, std::ofstream &output) {
+  UniformRealRandom r0(1 - context.row_uncertainty,
+                       1 + context.row_uncertainty);
   NormalRandom r(context.mean, context.stddev, context.seed);
   uint64_t n_elements = context.n_elements;
   for (auto i = 0u; i < context.n_points; i++) {
     SparseVector<double> v(i);
-    int size = n_elements / (context.n_points - i);
+    int size = n_elements / (context.n_points - i) * r0.next();
     sparse_data_gen(v, r, size);
     n_elements -= size;
     v.print(output, context);
@@ -104,6 +119,9 @@ int main(int argc, char *argv[]) {
   context.zipf = FLAGS_zipf;
   context.n_elements =
       1LL * context.n_points * context.n_dimension * context.sparsity;
+
+  check_uncertainty(FLAGS_row_uncertainty);
+  context.row_uncertainty = FLAGS_row_uncertainty;
 
   check_format(FLAGS_format);
   context.format = FLAGS_format;
