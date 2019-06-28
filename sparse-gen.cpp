@@ -58,8 +58,9 @@ void binary_data_gen(const Context &context, std::ofstream &output) {
   uint64_t n_elements = context.n_elements;
   for (auto i = 0u; i < context.n_points; i++) {
     SparseVector<bool> v(i);
-    int size = n_elements / (context.n_points - i) * r0.next();
-    sparse_data_gen(v, r, size);
+    int size = n_elements / (context.n_points - i);
+    int uncertain_size = size * r0.next();
+    sparse_data_gen(v, r, uncertain_size);
     n_elements -= size;
     v.print(output, context);
   }
@@ -72,8 +73,9 @@ void int_data_gen(const Context &context, std::ofstream &output) {
   uint64_t n_elements = context.n_elements;
   for (auto i = 0u; i < context.n_points; i++) {
     SparseVector<int> v(i);
-    int size = n_elements / (context.n_points - i) * r0.next();
-    sparse_data_gen(v, r, size);
+    int size = n_elements / (context.n_points - i);
+    int uncertain_size = size * r0.next();
+    sparse_data_gen(v, r, uncertain_size);
     n_elements -= size;
     v.print(output, context);
   }
@@ -86,8 +88,9 @@ void real_uniform_data_gen(const Context &context, std::ofstream &output) {
   uint64_t n_elements = context.n_elements;
   for (auto i = 0u; i < context.n_points; i++) {
     SparseVector<double> v(i);
-    int size = n_elements / (context.n_points - i) * r0.next();
-    sparse_data_gen(v, r, size);
+    int size = n_elements / (context.n_points - i);
+    int uncertain_size = size * r0.next();
+    sparse_data_gen(v, r, uncertain_size);
     n_elements -= size;
     v.print(output, context);
   }
@@ -100,8 +103,9 @@ void real_normal_data_gen(const Context &context, std::ofstream &output) {
   uint64_t n_elements = context.n_elements;
   for (auto i = 0u; i < context.n_points; i++) {
     SparseVector<double> v(i);
-    int size = n_elements / (context.n_points - i) * r0.next();
-    sparse_data_gen(v, r, size);
+    int size = n_elements / (context.n_points - i);
+    int uncertain_size = size * r0.next();
+    sparse_data_gen(v, r, uncertain_size);
     n_elements -= size;
     v.print(output, context);
   }

@@ -15,7 +15,6 @@
 template <class DataType> class SparseVector {
 
   class DokVectorPrinter {
-
   public:
     void operator()(std::ostream &o, const SparseVector &v,
                     const Context &context) {
