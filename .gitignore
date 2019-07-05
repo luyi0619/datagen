@@ -12,15 +12,11 @@ cmake/*
 !*.py
 
 # Unignore the following files
+!.gitignore
 !*CMakeLists.txt
 !.travis.yml
-!.gitignore
+!Dockerfile
 
 # Unignore source code directories
-!benchmark/
-!cmake
 !common/
 !core/
-!database/
-!protocol/
-!test/
