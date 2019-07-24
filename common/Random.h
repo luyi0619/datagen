@@ -64,3 +64,25 @@ public:
 private:
   std::normal_distribution<double> distribution;
 };
+
+class GammaRandom : public Random<double> {
+public:
+  GammaRandom(double alpha, double beta, uint64_t seed = 0)
+      : Random<double>(seed), distribution(alpha, beta) {}
+
+  double next() override { return distribution(this->generator); }
+
+private:
+  std::gamma_distribution<double> distribution;
+};
+
+class WeibullRandom : public Random<double> {
+public:
+  WeibullRandom(double a, double b, uint64_t seed = 0)
+      : Random<double>(seed), distribution(a, b) {}
+
+  double next() override { return distribution(this->generator); }
+
+private:
+  std::weibull_distribution<double> distribution;
+};

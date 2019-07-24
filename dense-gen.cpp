@@ -21,40 +21,42 @@ void dense_data_gen(DenseVector<DataType> &vec, RNG &random, std::size_t size) {
   }
 }
 
+#undef function_code_gen
+#define function_code_gen(data_type)                                           \
+  for (auto i = 0u; i < context.n_points; i++) {                               \
+    DenseVector<data_type> v;                                                  \
+    dense_data_gen(v, r, context.n_dimension);                                 \
+    v.print(output, context);                                                  \
+  }
+
 void binary_data_gen(const Context &context, std::ofstream &output) {
   BinaryRandom r(context.bernoulli, context.seed);
-  for (auto i = 0u; i < context.n_points; i++) {
-    DenseVector<bool> v;
-    dense_data_gen(v, r, context.n_dimension);
-    v.print(output, context);
-  }
+  function_code_gen(bool);
 }
 
 void int_data_gen(const Context &context, std::ofstream &output) {
   UniformIntRandom r(context.range_low, context.range_high, context.seed);
-  for (auto i = 0u; i < context.n_points; i++) {
-    DenseVector<int> v;
-    dense_data_gen(v, r, context.n_dimension);
-    v.print(output, context);
-  }
+  function_code_gen(int);
 }
 
 void real_uniform_data_gen(const Context &context, std::ofstream &output) {
   UniformRealRandom r(context.range_low, context.range_high, context.seed);
-  for (auto i = 0u; i < context.n_points; i++) {
-    DenseVector<double> v;
-    dense_data_gen(v, r, context.n_dimension);
-    v.print(output, context);
-  }
+  function_code_gen(double);
 }
 
 void real_normal_data_gen(const Context &context, std::ofstream &output) {
   NormalRandom r(context.mean, context.stddev, context.seed);
-  for (auto i = 0u; i < context.n_points; i++) {
-    DenseVector<double> v;
-    dense_data_gen(v, r, context.n_dimension);
-    v.print(output, context);
-  }
+  function_code_gen(double);
+}
+
+void real_gamma_data_gen(const Context &context, std::ofstream &output) {
+  GammaRandom r(context.alpha, context.beta, context.seed);
+  function_code_gen(double);
+}
+
+void real_weibull_data_gen(const Context &context, std::ofstream &output) {
+  WeibullRandom r(context.a, context.b, context.seed);
+  function_code_gen(double);
 }
 
 int main(int argc, char *argv[]) {
@@ -78,6 +80,10 @@ int main(int argc, char *argv[]) {
       real_uniform_data_gen(context, output);
     } else if (context.distribution == "normal") {
       real_normal_data_gen(context, output);
+    } else if (context.distribution == "gamma") {
+      real_gamma_data_gen(context, output);
+    } else if (context.distribution == "weibull") {
+      real_weibull_data_gen(context, output);
     } else {
       CHECK(false) << "wrong distribution type.";
     }

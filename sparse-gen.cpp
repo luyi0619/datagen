@@ -51,64 +51,48 @@ void sparse_data_gen(SparseVector<DataType> &vec, RNG &random,
   }
 }
 
-void binary_data_gen(const Context &context, std::ofstream &output) {
-  UniformRealRandom r0(1 - context.row_uncertainty,
-                       1 + context.row_uncertainty);
-  BinaryRandom r(context.bernoulli, context.seed);
-  uint64_t n_elements = context.n_elements;
-  for (auto i = 0u; i < context.n_points; i++) {
-    SparseVector<bool> v(i);
-    int size = n_elements / (context.n_points - i);
-    int uncertain_size = size * r0.next();
-    sparse_data_gen(v, r, uncertain_size);
-    n_elements -= size;
-    v.print(output, context);
+#undef function_code_gen
+#define function_code_gen(data_type)                                           \
+  UniformRealRandom r0(1 - context.row_uncertainty,                            \
+                       1 + context.row_uncertainty);                           \
+  uint64_t n_elements = context.n_elements;                                    \
+  for (auto i = 0u; i < context.n_points; i++) {                               \
+    SparseVector<data_type> v(i);                                              \
+    int size = n_elements / (context.n_points - i);                            \
+    int uncertain_size = size * r0.next();                                     \
+    sparse_data_gen(v, r, uncertain_size);                                     \
+    n_elements -= size;                                                        \
+    v.print(output, context);                                                  \
   }
+
+void binary_data_gen(const Context &context, std::ofstream &output) {
+  BinaryRandom r(context.bernoulli, context.seed);
+  function_code_gen(bool);
 }
 
 void int_data_gen(const Context &context, std::ofstream &output) {
-  UniformRealRandom r0(1 - context.row_uncertainty,
-                       1 + context.row_uncertainty);
   UniformIntRandom r(context.range_low, context.range_high, context.seed);
-  uint64_t n_elements = context.n_elements;
-  for (auto i = 0u; i < context.n_points; i++) {
-    SparseVector<int> v(i);
-    int size = n_elements / (context.n_points - i);
-    int uncertain_size = size * r0.next();
-    sparse_data_gen(v, r, uncertain_size);
-    n_elements -= size;
-    v.print(output, context);
-  }
+  function_code_gen(int);
 }
 
 void real_uniform_data_gen(const Context &context, std::ofstream &output) {
-  UniformRealRandom r0(1 - context.row_uncertainty,
-                       1 + context.row_uncertainty);
   UniformRealRandom r(context.range_low, context.range_high, context.seed);
-  uint64_t n_elements = context.n_elements;
-  for (auto i = 0u; i < context.n_points; i++) {
-    SparseVector<double> v(i);
-    int size = n_elements / (context.n_points - i);
-    int uncertain_size = size * r0.next();
-    sparse_data_gen(v, r, uncertain_size);
-    n_elements -= size;
-    v.print(output, context);
-  }
+  function_code_gen(double);
 }
 
 void real_normal_data_gen(const Context &context, std::ofstream &output) {
-  UniformRealRandom r0(1 - context.row_uncertainty,
-                       1 + context.row_uncertainty);
   NormalRandom r(context.mean, context.stddev, context.seed);
-  uint64_t n_elements = context.n_elements;
-  for (auto i = 0u; i < context.n_points; i++) {
-    SparseVector<double> v(i);
-    int size = n_elements / (context.n_points - i);
-    int uncertain_size = size * r0.next();
-    sparse_data_gen(v, r, uncertain_size);
-    n_elements -= size;
-    v.print(output, context);
-  }
+  function_code_gen(double);
+}
+
+void real_gamma_data_gen(const Context &context, std::ofstream &output) {
+  GammaRandom r(context.alpha, context.beta, context.seed);
+  function_code_gen(double);
+}
+
+void real_weibull_data_gen(const Context &context, std::ofstream &output) {
+  WeibullRandom r(context.a, context.b, context.seed);
+  function_code_gen(double);
 }
 
 int main(int argc, char *argv[]) {
@@ -146,6 +130,10 @@ int main(int argc, char *argv[]) {
       real_uniform_data_gen(context, output);
     } else if (context.distribution == "normal") {
       real_normal_data_gen(context, output);
+    } else if (context.distribution == "gamma") {
+      real_gamma_data_gen(context, output);
+    } else if (context.distribution == "weibull") {
+      real_weibull_data_gen(context, output);
     } else {
       CHECK(false) << "wrong distribution type.";
     }

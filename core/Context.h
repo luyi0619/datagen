@@ -25,6 +25,12 @@ public:
   double mean;
   double stddev;
 
+  double alpha;
+  double beta;
+
+  double a;
+  double b;
+
   uint64_t seed;
 
   double sparsity;
@@ -48,4 +54,8 @@ public:
   context.bernoulli = FLAGS_bernoulli;                                         \
   context.mean = FLAGS_mean;                                                   \
   context.stddev = FLAGS_stddev;                                               \
+  context.alpha = FLAGS_alpha;                                                 \
+  context.beta = FLAGS_beta;                                                   \
+  context.a = FLAGS_a;                                                         \
+  context.b = FLAGS_b;                                                         \
   context.seed = FLAGS_seed;
